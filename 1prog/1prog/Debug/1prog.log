@@ -1,2 +1,3 @@
 ﻿  1prog.cpp
-  1prog.vcxproj -> C:\Users\Admin\Desktop\C++\1prog\Debug\1prog.exe
+C:\Users\Admin\Documents\GitHub\Wheel\1prog\1prog\1prog.cpp(19,19): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  1prog.vcxproj -> C:\Users\Admin\Documents\GitHub\Wheel\1prog\Debug\1prog.exe

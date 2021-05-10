@@ -11,40 +11,48 @@
 using namespace std;
 
 
-class Wheel {
 
+class Wheel {
+    
 public:
-    //Wheel() {
-    //    cout << "Создан обьект класа Wheel" << endl;
-    //}
-    int black = 1;
-    int red = 2;
-    int blue = 3;
-    int gold = 4;
+    Wheel() {
+        srand(time(NULL));
+        cout << " Добро пожаловать в рулеточку)" << endl;
+    }
+    enum Colors {
+        BLACK = 1,
+        RED = 2,
+        BLUE = 3,
+        GOLD = 4,
+    };
+
+
+
     int winner;
 
+    // Вычисления выигрышного числа
     int randomizer(){
        
-        winner = 1+rand() % 2;
+        winner = 1+rand() % 4;
         return winner;
     }
 
 
-
+    // Соотношение цвета и кооф на умножение ставки
     int coefficient() {
         int coefficient = 0;
         switch (winner)
         {
-        case 1:
+        case BLACK:
             coefficient = 2;
             break;
-        case 2:
+        case RED:
             coefficient = 3;
             break;
-        case 3:
+        case BLUE:
             coefficient = 5;
             break;
-        case 4:
+        case GOLD:
             coefficient = 50;
             break;
         default:
@@ -56,31 +64,52 @@ public:
 
     ~Wheel()
     {
-        cout << " Вызов диструктора Wheel\n";
+        cout << " Wheeеееееl\n";
+        Sleep(1000);
     }
 
 };
 
+
+
 class Money : public Wheel {
      //Constructor
 public:
+    long current_balance = 1000;
     Money() {
-        cout << "Создан обьект класа Money" << endl;
+        cout << " У тебя на балансе: " << current_balance <<  "$ " << endl;
     }
-    unsigned int current_balance = 1000;
-    unsigned int bet_price;
-
+    long bet_price;
     int enter_money() {
-        cout << "Введите сколько поставить: \n";
-        cin >> bet_price;
-        return bet_price;
+    tryAgain_money:
+    cout << " Введите сколько поставить: \n";
+    cin >> bet_price;
+        if (bet_price > current_balance) {
+            cout << " У вас недостаточно денег! \n";
+            goto tryAgain_money;
+        }
+        else if (bet_price == 0) {
+            cout << " Не возможно поставить число 0! \n";
+            goto tryAgain_money;
+        }
+        else if (bet_price <= 0) {
+            cout << " Нельзя ставить отрицательные числа! \n";
+            goto tryAgain_money;
+        }
+        else {  
+            return bet_price;
+        }
+
+
+
+      
     }
 
-    // Зменшився баланс
+    // Уменчить баланс
     int minus() {
         return current_balance = current_balance - bet_price;
     }
-    // Збільшився баланс
+    // Увеличить баланс
     int plus() {
         return current_balance += bet_price * coefficient(); 
          
@@ -88,33 +117,38 @@ public:
 
     int betted_color() {
         string color_str;
-        unsigned int betted_color;
-        cout << "На который цвет поставить? \n";
-        cin >> color_str;
-        if (color_str == "black") {
-            betted_color = black;
-        }
-        else if (color_str == "red")
-        {
-            betted_color = red;
-        }
-        //else if (color_str == "blue")
-        //{
-        //    betted_color = blue;
-        //}
-        //else if (color_str == "gold")
-        //{
-        //    betted_color = gold;
-        //}
-        else {
-            betted_color = 0;
-        }
-        return betted_color;
+        int betted_color;
+        tryAgain_color:
+            cout << " На который цвет поставить? black/red/blue/gold \n";
+            cin >> color_str;
+            if (color_str == "black" || color_str == "1") {
+                betted_color = BLACK;
+            }
+            else if (color_str == "red" || color_str == "2")
+            {
+                betted_color = RED;
+            }
+            else if (color_str == "blue" || color_str == "3")
+            {
+                betted_color = BLUE;
+            }
+            else if (color_str == "gold" || color_str == "4")
+            {
+                betted_color = GOLD;
+            }
+            else {
+                cout << " Не правильно выбран цвет, нужно вписать black или red или blue или gold\n";
+                goto tryAgain_color;
+                
+            }
+            return betted_color;
+            
+
     }
 
 
     int check_balance() {
-        cout << "Баланс: " << current_balance << endl;
+        cout << " Баланс: " << current_balance << endl;
         return current_balance;
     }
 
@@ -125,28 +159,28 @@ public:
         if (betted_color() == randomizer()) {
             minus();
             plus();
-            cout << "-" << bet_price << " $ ";
-            cout << "Рулетка крутится ! \n";
+            cout << " -" << bet_price << " $ ";
+            cout << " Рулетка крутится ! \n";
             int i = 0;
             while (i != 10) {
                 Sleep(100);
                 cout << " . ";
                 i++;
             }
-            cout << "\nВыпал (x" << coefficient() << ") : +" << current_balance - pre_balance << " $ ";
+            cout << "\n Выпал (x" << coefficient() << ") : +" << current_balance - pre_balance << " $ ";
             check_balance();
         }
         else {
             minus();
-            cout << "-" << bet_price << " $ ";
-            cout << "Рулетка крутится ! \n";
+            cout << " -" << bet_price << " $ ";
+            cout << " Рулетка крутится ! \n";
             int i = 0;
             while (i != 10) {
                 Sleep(100);
                 cout << " . ";
                 i++;
             }
-            cout << "\nВыпал (x" << coefficient() << ")  You lose " << bet_price << " $ " << endl;
+            cout << "\n Выпал (x" << coefficient() << ")  You lose " << bet_price << " $ " << endl;
             check_balance();
         }
 
@@ -168,7 +202,7 @@ public:
 
     ~Money()
     {
-        cout << " Вызов диструктора Money\n";
+        cout << " Спасибо что просрали деньги у нас)\n";
     }
 
 
@@ -177,21 +211,25 @@ public:
 int main()
 {
     setlocale(LC_ALL, "rus");
-    unsigned int start_balance = 1000;
+    int start_balance = 1000;
 
     Money new_session;
     new_session.current_balance = start_balance;
 
     while ( true ) {
 
-        cout << "Привет друг! Играем? yes, no" << endl;
         string start;
+    again:
+        cout << " Играем? yes, no" << endl;
         cin >> start;
-        if (start == "yes") {
-            cout << "Ну ок)" << endl;;
+        if (start == "yes" || start == "y" || start == "да") {
+            cout << " Ну ок)" << endl;;
+        }
+        else if (start == "no") {
+            return 0;
         }
         else {
-            return 0;
+            goto again;
         }
         new_session.bet_event();
 
